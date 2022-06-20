@@ -1,5 +1,7 @@
 package com.mygdx.gamestuff;
 
+import javax.swing.JOptionPane;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.pfa.GraphPath;
@@ -11,14 +13,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.Spritess.PlayerMP;
+import com.mygdx.Spritess.testAGV;
 import com.mygdx.Spritess.testAgent;
 import com.mygdx.Spritess.testMainPlayer;
-import com.mygdx.Spritess.testAGV;
 import com.mygdx.forAstar.City;
 import com.mygdx.forAstar.CityGraph;
 import com.mygdx.forAstar.Street;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.tools.B2WorldCreator;
+
+import NetworkPack.Packet00Login;
+import Networking.GameClient;
+import Networking.GameServer;
+
 
 
 public class GameScreen implements Screen {
@@ -33,8 +41,9 @@ public class GameScreen implements Screen {
 	testMainPlayer testMain;
 	testAgent testA;
 	testAgent testB;
+	public PlayerMP mpPlayer;
     //physics world
-	private World world;
+	public World world;
 	private Box2DDebugRenderer b2dr;
     //graph
 	public  CityGraph cityGraph;
@@ -44,6 +53,10 @@ public class GameScreen implements Screen {
 	public  BitmapFont font;
 	public int currentRank = 0;
 	
+	public GameClient client;
+	public GameServer server;
+	Packet00Login loginPacket;
+	public boolean canMove = false;
 
 	public GameScreen(MyGdxGame mygame) {
 		
@@ -73,14 +86,21 @@ public class GameScreen implements Screen {
 	    batch = new SpriteBatch();
 	    font = new BitmapFont();
         cityGraph = new CityGraph();
-  
 		createNode();
-		
+		if(JOptionPane.showConfirmDialog(null, "Do U wana initialize the server ?") == 0) {
+		server = new GameServer(this);
+		server.start();
+		canMove = true;
+		}
+		client = new GameClient(this, "localhost");
+		client.start();
+		loginPacket = new Packet00Login(JOptionPane.showInputDialog(this,"anh thien dep trai vai dai"));
+		loginPacket.writeData(client);
 	}
 
 	@Override
 	public void render(float delta) {
-	
+		
 		world.step(1 / 60f, 6, 2);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -103,9 +123,9 @@ public class GameScreen implements Screen {
 		cityPath.get(2).render(shapeRenderer, batch, font, true);
 	    
 		b2dr.render(world, camera.combined);
-        testMain.HandleInput();
-     
-       
+       if(canMove == true) 
+       mpPlayer.HandleInput();
+       testMain.HandleInput();
 		
 		
 		// Rendering code

@@ -11,8 +11,10 @@ public class MyGdxGame extends Game {
 
 	@Override
 	public void create() {
+		
         gameScreen = new GameScreen(this);
 		setScreen(gameScreen);
+		
 		music = Gdx.audio.newMusic(Gdx.files.internal("backgroundsound.mp3"));
 		music.play();
 		music.setVolume(0);

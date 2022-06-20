@@ -36,7 +36,7 @@ public class testAgent extends BodyPhysic {
 		{
 			right();
 		}
-		System.out.println(xRand);
+		
 		 
 		if(this.b2body.getPosition().y != 476*32/26)
 		{

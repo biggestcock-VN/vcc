@@ -42,7 +42,7 @@ public class testAGV extends BodyPhysic {
 
 	private void render() {
 		if (canRender == true) {
-			b2body.setTransform(PosX, PosY, 0);
+			b2body.setTransform(PosX, PosY, 90);
 			b2body.setAwake(true);
 		}
 	}
@@ -108,7 +108,7 @@ public class testAGV extends BodyPhysic {
 		reachend = true;
 		this.count++;
 		world.destroyBody(b2body);
-		System.out.println("you reached the goal");
+		//System.out.println("you reached the goal");
 		// setGoal(newGoal);
 	}
 
@@ -126,7 +126,7 @@ public class testAGV extends BodyPhysic {
 				nextCity.x * 32 / 26 - previousCity.x * 32 / 26);
 		deltaX = MathUtils.cos(angle) * speed;
 		deltaY = MathUtils.sin(angle) * speed;
-		System.out.println(deltaX + " and " + deltaY);
+		//System.out.println(deltaX + " and " + deltaY);
 	}
 
 }
